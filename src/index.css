@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "@fontsource/playfair-display/400.css";
+@import "@fontsource/playfair-display/500.css";
+@import "@fontsource/playfair-display/600.css";
+@import "@fontsource/playfair-display/700.css";
+@import "@fontsource/lato/300.css";
+@import "@fontsource/lato/400.css";
+@import "@fontsource/lato/700.css";
+
+/* Torsore Luxury E-commerce Design System */
+
+@layer base {
+  :root {
+    /* Primary - Deep Gold */
+    --primary: 43 76% 52%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Secondary - Royal Blue */
+    --secondary: 213 52% 24%;
+    --secondary-foreground: 0 0% 100%;
+    
+    /* Background */
+    --background: 40 33% 98%;
+    --foreground: 213 52% 12%;
+    
+    /* Card */
+    --card: 0 0% 100%;
+    --card-foreground: 213 52% 12%;
+    
+    /* Popover */
+    --popover: 0 0% 100%;
+    --popover-foreground: 213 52% 12%;
+    
+    /* Muted - Soft cream */
+    --muted: 40 20% 94%;
+    --muted-foreground: 213 20% 40%;
+    
+    /* Accent - Silver */
+    --accent: 0 0% 75%;
+    --accent-foreground: 213 52% 12%;
+    
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Borders */
+    --border: 40 20% 88%;
+    --input: 40 20% 88%;
+    --ring: 43 76% 52%;
+    
+    --radius: 0.5rem;
+    
+    /* Custom luxury colors */
+    --gold: 43 76% 52%;
+    --gold-light: 43 60% 70%;
+    --gold-dark: 43 76% 40%;
+    --royal-blue: 213 52% 24%;
+    --royal-blue-light: 213 40% 35%;
+    --silver: 0 0% 75%;
+    --cream: 40 33% 96%;
+    --ivory: 40 40% 98%;
+    
+    /* Gradients */
+    --gradient-gold: linear-gradient(135deg, hsl(43 76% 52%), hsl(43 60% 70%));
+    --gradient-luxury: linear-gradient(135deg, hsl(43 76% 52%), hsl(213 52% 24%));
+    --gradient-satin: linear-gradient(180deg, hsl(40 33% 98%), hsl(40 20% 94%));
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(213 52% 12% / 0.1);
+    --shadow-elegant: 0 10px 40px -10px hsl(43 76% 52% / 0.2);
+    --shadow-card: 0 2px 12px -2px hsl(213 52% 12% / 0.08);
+    
+    /* Sidebar - matches luxury theme */
+    --sidebar-background: 40 33% 98%;
+    --sidebar-foreground: 213 52% 24%;
+    --sidebar-primary: 43 76% 52%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 40 20% 94%;
+    --sidebar-accent-foreground: 213 52% 24%;
+    --sidebar-border: 40 20% 88%;
+    --sidebar-ring: 43 76% 52%;
+  }
+
+  .dark {
+    --primary: 43 76% 52%;
+    --primary-foreground: 213 52% 12%;
+    
+    --secondary: 213 40% 35%;
+    --secondary-foreground: 0 0% 100%;
+    
+    --background: 213 52% 8%;
+    --foreground: 40 33% 96%;
+    
+    --card: 213 52% 12%;
+    --card-foreground: 40 33% 96%;
+    
+    --popover: 213 52% 12%;
+    --popover-foreground: 40 33% 96%;
+    
+    --muted: 213 40% 18%;
+    --muted-foreground: 40 20% 70%;
+    
+    --accent: 213 40% 25%;
+    --accent-foreground: 40 33% 96%;
+    
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 213 40% 20%;
+    --input: 213 40% 20%;
+    --ring: 43 76% 52%;
+    
+    --sidebar-background: 213 52% 10%;
+    --sidebar-foreground: 40 33% 96%;
+    --sidebar-primary: 43 76% 52%;
+    --sidebar-primary-foreground: 213 52% 12%;
+    --sidebar-accent: 213 40% 18%;
+    --sidebar-accent-foreground: 40 33% 96%;
+    --sidebar-border: 213 40% 20%;
+    --sidebar-ring: 43 76% 52%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Lato', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer utilities {
+  .font-serif {
+    font-family: 'Playfair Display', serif;
+  }
+  
+  .font-sans {
+    font-family: 'Lato', sans-serif;
+  }
+  
+  .text-gradient-gold {
+    background: linear-gradient(135deg, hsl(43 76% 52%), hsl(43 60% 70%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .bg-gradient-gold {
+    background: linear-gradient(135deg, hsl(43 76% 52%), hsl(43 60% 70%));
+  }
+  
+  .bg-gradient-luxury {
+    background: linear-gradient(135deg, hsl(43 76% 52%), hsl(213 52% 24%));
+  }
+  
+  .bg-satin {
+    background: linear-gradient(180deg, hsl(40 33% 98%), hsl(40 20% 94%));
+  }
+  
+  .shadow-soft {
+    box-shadow: 0 4px 20px -4px hsl(213 52% 12% / 0.1);
+  }
+  
+  .shadow-elegant {
+    box-shadow: 0 10px 40px -10px hsl(43 76% 52% / 0.2);
+  }
+  
+  .shadow-card {
+    box-shadow: 0 2px 12px -2px hsl(213 52% 12% / 0.08);
+  }
+
+  /* Hover animations */
+  .hover-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+  
+  .hover-lift:hover {
+    @apply -translate-y-1;
+    box-shadow: 0 12px 30px -8px hsl(213 52% 12% / 0.15);
+  }
+  
+  .hover-glow {
+    @apply transition-all duration-300;
+  }
+  
+  .hover-glow:hover {
+    box-shadow: 0 0 30px hsl(43 76% 52% / 0.3);
+  }
+}
