@@ -27,10 +27,19 @@ const navLinks = [
   { name: "Contact", href: "/contact" },
 ];
 
+const submenus: Record<string, string[]> = {
+  "/shop": ["Men", "Women", "Child"],
+  "/party-wear": ["Men", "Women", "Child"],
+  "/custom-orders": ["Men", "Women", "Child"],
+  "/wedding": ["Men", "Women", "Child"],
+};
+
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [activeMega, setActiveMega] = useState<string | null>(null);
+  const [megaSegment, setMegaSegment] = useState<"Men" | "Women" | "Child">("Women");
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdmin();
   const onBanner = !isScrolled;
@@ -58,14 +67,14 @@ export function Navbar() {
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        isScrolled ? "bg-card/95 backdrop-blur-md shadow-soft" : "bg-black/5 backdrop-blur-md"
+        isScrolled ? "bg-green-900 shadow-soft text-white" : "bg-black/5 backdrop-blur-md text-white"
       )}
     >
-      <nav className="container mx-auto px-4 lg:px-8">
+      <nav className="container mx-auto px-4 lg:px-8 relative" onMouseLeave={() => setActiveMega(null)}>
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex-shrink-0">
-            <h1 className="font-serif text-2xl md:text-3xl font-semibold tracking-wide">
+            <h1 className="mr-2">
               <span className="text-gradient-gold"><img src="/logo-removebg-preview.png" alt="Torsore" className="h-12 w-auto" /></span>
             </h1>
           </Link>
@@ -73,26 +82,69 @@ export function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
-              <Link
+              <div
                 key={link.name}
-                to={link.href}
-                className={cn(
-                  "text-sm font-medium transition-colors relative group",
-                  location.pathname === link.href
-                    ? "text-primary"
-                    : onBanner
-                      ? "text-white/90 hover:text-white"
-                      : "text-foreground/80 hover:text-primary"
-                )}
+                className="relative group"
+                onMouseEnter={() => setActiveMega(link.href)}
               >
-                {link.name}
-                <span
+                <Link
+                  to={link.href}
                   className={cn(
-                    "absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300",
-                    location.pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
+                    "text-sm font-medium transition-colors relative",
+                    location.pathname === link.href
+                      ? "text-primary"
+                      : onBanner
+                        ? "text-white/90 hover:text-white"
+                        : "text-white/90 hover:text-white"
                   )}
-                />
-              </Link>
+                >
+                  {link.name}
+                  <span
+                    className={cn(
+                      "absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300",
+                      location.pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
+                    )}
+                  />
+                </Link>
+                {activeMega === link.href && submenus[link.href] && (
+                  <div className="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-[min(1100px,40vw)]">
+                    <div className="rounded-lg border border-white/10 bg-white text-foreground shadow-soft">
+                      <div className="flex items-center gap-5 px-8 pt-4">
+                        {["Men", "Women", "Child"].map((seg) => (
+                          <button
+                            key={seg}
+                            onClick={() => setMegaSegment(seg as "Men" | "Women" | "Child")}
+                            className={cn(
+                              "px-2 py-2 text-sm rounded-md",
+                              megaSegment === seg ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                            )}
+                          >
+                            {seg}
+                          </button>
+                        ))}
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-6 px-6 py-6">
+                        {getMegaColumns(link.href, megaSegment).map((col) => (
+                          <div key={col.title}>
+                            <div className="font-medium mb-3 text-primary">{col.title}</div>
+                            <div className="space-y-2">
+                              {col.items.map((item) => (
+                                <Link
+                                  key={item.label}
+                                  to={item.href}
+                                  className="block text-sm text-muted-foreground hover:text-foreground"
+                                   >
+                                  {item.label}
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
 
@@ -103,7 +155,7 @@ export function Navbar() {
               variant="ghost"
               size="icon"
               onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className={cn(onBanner ? "text-white hover:bg-white/10" : "hover:bg-primary/10")}
+              className={cn(onBanner ? "text-white hover:bg-white/10" : "text-white hover:bg-primary/10")}
             >
               <Search className="h-5 w-5" />
             </Button>
@@ -113,7 +165,7 @@ export function Navbar() {
               <Button
                 variant="ghost"
                 size="icon"
-                className={cn("hidden md:flex", onBanner ? "text-white hover:bg-white/10" : "hover:bg-primary/10")}
+                className={cn("hidden md:flex", onBanner ? "text-white hover:bg-white/10" : "text-white hover:bg-primary/10")}
               >
                 <Heart className="h-5 w-5" />
               </Button>
@@ -126,7 +178,7 @@ export function Navbar() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className={cn(onBanner ? "text-white hover:bg-white/10" : "hover:bg-primary/10")}
+                    className={cn(onBanner ? "text-white hover:bg-white/10" : "text-white hover:bg-primary/10")}
                   >
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={user.user_metadata?.avatar_url} />
@@ -172,7 +224,7 @@ export function Navbar() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className={cn(onBanner ? "text-white hover:bg-white/10" : "hover:bg-primary/10")}
+                  className={cn(onBanner ? "text-white hover:bg-white/10" : "text-white hover:bg-primary/10")}
                 >
                   <User className="h-5 w-5"/>
                 </Button>
@@ -186,7 +238,7 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              className={cn("lg:hidden", onBanner ? "text-white hover:bg-white/10" : "hover:bg-primary/10")}
+              className={cn("lg:hidden", onBanner ? "text-white hover:bg-white/10" : "text-white hover:bg-primary/10")}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -247,6 +299,19 @@ export function Navbar() {
                     >
                       {link.name}
                     </Link>
+                    {submenus[link.href] && (
+                      <div className="pl-4">
+                        {submenus[link.href].map((item) => (
+                          <Link
+                            key={item}
+                            to={`${link.href}?segment=${item.toLowerCase()}`}
+                            className="block py-2 text-lg text-muted-foreground hover:text-foreground"
+                          >
+                            {item}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
                   </motion.div>
                 ))}
                 <motion.div
@@ -269,4 +334,56 @@ export function Navbar() {
       </AnimatePresence>
     </header>
   );
+}
+
+type MegaColumn = { title: string; items: { label: string; href: string }[] };
+
+function getMegaColumns(parent: string, seg: "Men" | "Women" | "Child"): MegaColumn[] {
+  const base = (p: string, labels: string[]): MegaColumn => ({
+    title: p,
+    items: labels.map((l) => ({
+      label: l,
+      href: `${parent}?segment=${seg.toLowerCase()}&category=${encodeURIComponent(l.toLowerCase().replace(/\s+/g, "-"))}`,
+    })),
+  });
+  if (parent === "/shop") {
+    if (seg === "Women") {
+      return [
+        base("Indian & Fusion Wear", ["Lehengas", "Sarees", "Kurtas & Suits", "Dupattas", "Skirts"]),
+        base("Western Wear", ["Dresses", "Tops", "Co-ords", "Shrugs", "Jumpsuits"]),
+        base("Footwear & Accessories", ["Heels", "Flats", "Jewellery", "Handbags", "Backpacks"]),
+      ];
+    }
+    if (seg === "Men") {
+      return [
+        base("Ethnic Wear", ["Kurtas", "Sherwanis", "Nehru Jackets", "Dhoti Sets", "Pathani Suits"]),
+        base("Western Wear", ["Tshirts", "Shirts", "Jeans", "Trousers", "Blazers"]),
+        base("Footwear & Accessories", ["Casual Shoes", "Formal Shoes", "Belts", "Wallets", "Watches"]),
+      ];
+    }
+    return [
+      base("Kids Wear", ["Ethnic Sets", "Party Dresses", "Tops & Tees", "Skirts", "Shorts"]),
+      base("Footwear", ["Sandals", "Sneakers", "Boots", "Flats", "School Shoes"]),
+      base("Accessories", ["Bags", "Belts", "Caps", "Hair Accessories", "Jewellery"]),
+    ];
+  }
+  if (parent === "/party-wear") {
+    return [
+      base("Occasion", ["Cocktail Dresses", "Evening Gowns", "Sequins", "Velvet", "Festive"]),
+      base("Styles", ["Bodycon", "A-line", "Mermaid", "One-Shoulder", "Wrap"]),
+      base("Add-ons", ["Shawls", "Clutches", "Heels", "Jewellery", "Hair Pins"]),
+    ];
+  }
+  if (parent === "/wedding") {
+    return [
+      base("Bridal", ["Wedding Dresses", "Bridal Gowns", "Reception Wear", "Engagement Wear", "Sangeet"]),
+      base("Family", ["Bridesmaids", "Groomsmen", "Mother of Bride", "Kids Wedding", "Guests"]),
+      base("Accessories", ["Veils", "Jewellery", "Footwear", "Clutches", "Hair Accessories"]),
+    ];
+  }
+  return [
+    base("Customization", ["Made-to-Measure", "Color Options", "Embroidery", "Fabric Choice", "Fit Adjustments"]),
+    base("Occasions", ["Wedding", "Party", "Festival", "Corporate", "Casual"]),
+    base("Consultation", ["Style Guide", "Measurements", "Trial Session", "Delivery Options", "Care"]),
+  ];
 }

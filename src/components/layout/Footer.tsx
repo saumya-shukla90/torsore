@@ -72,9 +72,9 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2">
             <Link to="/">
-              <h2 className="font-serif text-3xl font-semibold text-gradient-gold mb-4">
-                Torsore
-              </h2>
+              <div className="mb-4">
+                <img src="/logo-removebg-preview.png" alt="Torsore" className="h-14 w-auto" />
+              </div>
             </Link>
             <p className="text-muted-foreground mb-6 max-w-sm">
               Celebrating life's special moments with exquisite designs. 
