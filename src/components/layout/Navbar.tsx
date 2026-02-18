@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, User, Menu, X, Heart, LogOut, Shield } from "lucide-react";
+import { ChevronDown, Search, User, Menu, X, Heart, LogOut, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -35,14 +35,19 @@ const submenus: Record<string, string[]> = {
 };
 
 export function Navbar() {
+  const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeMega, setActiveMega] = useState<string | null>(null);
   const [megaSegment, setMegaSegment] = useState<"Men" | "Women" | "Child">("Women");
+  const [mobileMegaOpen, setMobileMegaOpen] = useState<string | null>(null);
+  const [mobileMegaSegment, setMobileMegaSegment] = useState<"Men" | "Women" | "Child">("Women");
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdmin();
   const onBanner = !isScrolled;
+
+  const mobileMegaParents = useMemo(() => new Set(Object.keys(submenus)), []);
 
   const userInitials = user?.user_metadata?.full_name
     ?.split(" ")
@@ -61,12 +66,22 @@ export function Navbar() {
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setIsSearchOpen(false);
+    setMobileMegaOpen(null);
   }, [location]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isMobileMenuOpen]);
 
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-[200] isolate transition-all duration-300",
         isScrolled ? "bg-secondary shadow-soft text-white" : "bg-black/5 backdrop-blur-md text-white"
       )}
     >
@@ -272,64 +287,147 @@ export function Navbar() {
       {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ type: "tween", duration: 0.3 }}
-            className="fixed inset-0 top-20 bg-card z-40 lg:hidden"
-          >
-            <div className="container py-8 px-4 bg-white">
-              <div className="flex flex-col gap-4">
-                {navLinks.map((link, index) => (
-                  <motion.div
-                    key={link.name}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <Link
-                      to={link.href}
-                      className={cn(
-                        "block text-xl font-medium py-3 border-b border-border transition-colors",
-                        location.pathname === link.href
-                          ? "text-primary"
-                          : "text-foreground hover:text-primary"
-                      )}
-                    >
-                      {link.name}
-                    </Link>
-                    {submenus[link.href] && (
-                      <div className="pl-4">
-                        {submenus[link.href].map((item) => (
+          <>
+            <motion.button
+              type="button"
+              aria-label="Close menu"
+              onClick={() => setIsMobileMenuOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 top-20 z-[205] bg-black/40 lg:hidden"
+            />
+
+            <motion.div
+              initial={{ opacity: 0, x: "100%" }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: "100%" }}
+              transition={{ type: "tween", duration: 0.3 }}
+              className="fixed inset-0 top-20 z-[210] overflow-y-auto overscroll-contain bg-background lg:hidden"
+            >
+              <div className="container py-6 px-4">
+                <div className="flex flex-col gap-1">
+                  {navLinks.map((link, index) => {
+                    const isMegaParent = mobileMegaParents.has(link.href);
+                    const isOpen = mobileMegaOpen === link.href;
+
+                    return (
+                      <motion.div
+                        key={link.name}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className="border-b border-border"
+                      >
+                        <div className="flex items-center justify-between gap-3 py-3">
                           <Link
-                            key={item}
-                            to={`${link.href}?segment=${item.toLowerCase()}`}
-                            className="block py-2 text-lg text-muted-foreground hover:text-foreground"
+                            to={link.href}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className={cn(
+                              "text-xl font-medium transition-colors",
+                              location.pathname === link.href
+                                ? "text-primary"
+                                : "text-foreground hover:text-primary"
+                            )}
                           >
-                            {item}
+                            {link.name}
                           </Link>
-                        ))}
-                      </div>
-                    )}
-                  </motion.div>
-                ))}
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: navLinks.length * 0.1 }}
-                  className="pt-4"
-                >
-                  <Link to="/wishlist">
-                    <Button variant="outline" className="w-full justify-start gap-3">
-                      <Heart className="h-5 w-5" />
-                      Wishlist
-                    </Button>
-                  </Link>
-                </motion.div>
+
+                          {isMegaParent && (
+                            <button
+                              type="button"
+                              aria-expanded={isOpen}
+                              aria-label={`${isOpen ? "Collapse" : "Expand"} ${link.name} categories`}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setMobileMegaOpen((prev) => (prev === link.href ? null : link.href));
+                              }}
+                              className="p-2 rounded-md hover:bg-muted"
+                            >
+                              <ChevronDown className={cn("h-5 w-5 transition-transform", isOpen && "rotate-180")} />
+                            </button>
+                          )}
+                        </div>
+
+                        <AnimatePresence initial={false}>
+                          {isMegaParent && isOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="overflow-hidden pb-4"
+                            >
+                              {/* Segment tabs (same as desktop functionality) */}
+                              <div className="flex items-center gap-2 pb-4">
+                                {(["Men", "Women", "Child"] as const).map((seg) => (
+                                  <button
+                                    key={seg}
+                                    type="button"
+                                    onClick={() => setMobileMegaSegment(seg)}
+                                    className={cn(
+                                      "px-3 py-2 text-sm rounded-md border",
+                                      mobileMegaSegment === seg
+                                        ? "bg-primary text-primary-foreground border-primary"
+                                        : "bg-background text-muted-foreground border-border hover:text-foreground"
+                                    )}
+                                  >
+                                    {seg}
+                                  </button>
+                                ))}
+                                <div className="ml-auto">
+                                  <Link
+                                    to={`${link.href}?segment=${mobileMegaSegment.toLowerCase()}`}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="text-sm text-primary hover:underline"
+                                  >
+                                    View all
+                                  </Link>
+                                </div>
+                              </div>
+
+                              {/* Grouped columns (same data as desktop mega menu) */}
+                              <div className="space-y-4 pl-1">
+                                {getMegaColumns(link.href, mobileMegaSegment).map((col) => (
+                                  <div key={col.title} className="space-y-2">
+                                    <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                                      {col.title}
+                                    </div>
+                                    <div className="space-y-1">
+                                      {col.items.map((item) => (
+                                        <Link
+                                          key={item.href}
+                                          to={item.href}
+                                          onClick={() => setIsMobileMenuOpen(false)}
+                                          className="block text-sm text-foreground/90 hover:text-primary"
+                                        >
+                                          {item.label}
+                                        </Link>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
+                    );
+                  })}
+
+                  <div className="pt-5">
+                    <Link to="/wishlist" onClick={() => setIsMobileMenuOpen(false)}>
+                      <Button variant="outline" className="w-full justify-start gap-3">
+                        <Heart className="h-5 w-5" />
+                        Wishlist
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </header>

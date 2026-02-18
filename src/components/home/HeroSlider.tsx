@@ -84,13 +84,13 @@ export function HeroSlider() {
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3, duration: 0.6 }}
+                    transition={{ delay: 0, duration: 0.6 }}
                     className="max-w-2xl text-white"
                   >
                     <motion.p
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.4 }}
+                      transition={{ delay: 0 }}
                       className="text-primary font-medium mb-4 tracking-widest uppercase"
                     >
                       {slide.subtitle}
@@ -98,7 +98,7 @@ export function HeroSlider() {
                     <motion.h1
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.5 }}
+                      transition={{ delay: 0 }}
                       className="font-serif text-4xl md:text-5xl lg:text-7xl font-bold leading-tight mb-6"
                     >
                       {slide.title}
@@ -106,7 +106,7 @@ export function HeroSlider() {
                     <motion.p
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.6 }}
+                      transition={{ delay: 0 }}
                       className="text-lg md:text-xl text-white/90 mb-8 max-w-lg"
                     >
                       {slide.description}
@@ -114,7 +114,7 @@ export function HeroSlider() {
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.7 }}
+                      transition={{ delay: 0 }}
                       className="flex flex-col sm:flex-row gap-4"
                     >
                       <Link to={slide.ctaLink}>
@@ -142,22 +142,7 @@ export function HeroSlider() {
         )}
       </AnimatePresence>
 
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/10 backdrop-blur-sm text-white hover:bg-primary transition-colors flex items-center justify-center"
-        aria-label="Previous slide"
-      >
-        <ChevronLeft className="h-6 w-6" />
-      </button>
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/10 backdrop-blur-sm text-white hover:bg-primary transition-colors flex items-center justify-center"
-        aria-label="Next slide"
-      >
-        <ChevronRight className="h-6 w-6" />
-      </button>
-
+    
       {/* Slide Indicators */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">
         {slides.map((_, index) => (
