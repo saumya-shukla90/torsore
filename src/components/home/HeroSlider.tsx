@@ -36,12 +36,21 @@ const slides = [
 
 export function HeroSlider() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
+    if (isPaused) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 6000);
     return () => clearInterval(timer);
+  }, [isPaused]);
+
+  useEffect(() => {
+    slides.forEach((s) => {
+      const img = new Image();
+      img.src = s.image;
+    });
   }, []);
 
   const goToSlide = (index: number) => {
@@ -57,94 +66,107 @@ export function HeroSlider() {
   };
 
   return (
-    <section className="relative h-screen w-full overflow-hidden">
+    <section
+      className="relative min-h-[calc(100vh-80px)] pt-20 w-full overflow-hidden bg-secondary"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
       <AnimatePresence mode="wait">
-        {slides.map(
-          (slide, index) =>
-            index === currentSlide && (
-              <motion.div
-                key={slide.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.8 }}
-                className="absolute inset-0"
+        {slides.map((slide, index) => {
+          if (index !== currentSlide) return null;
+          const alignRight = index % 2 === 1;
+          const gradientClass = alignRight
+            ? "bg-gradient-to-l from-secondary/80 via-secondary/50 to-transparent"
+            : "bg-gradient-to-r from-secondary/80 via-secondary/50 to-transparent";
+          const containerAlign = alignRight ? "justify-end" : "justify-start";
+          const textAlign = alignRight ? "text-right" : "text-left";
+          return (
+            <motion.div
+              key={slide.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0.6 }}
+              transition={{ duration: 0.8 }}
+              className="absolute inset-0"
+            >
+              {/* Background Image with subtle zoom */}
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url(${slide.image})` }}
               >
-                {/* Background Image */}
-                <div
-                  className="absolute inset-0 bg-cover bg-center"
-                  style={{ backgroundImage: `url(${slide.image})` }}
-                >
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-secondary/80 via-secondary/50 to-transparent" />
-                </div>
+                <motion.div
+                  className={`absolute inset-0 bg-black/30 ${gradientClass}`}
+                  initial={{ scale: 1 }}
+                  animate={{ scale: 1.06 }}
+                  transition={{ duration: 6, ease: "linear" }}
+                />
+              </div>
 
-                {/* Content */}
-                <div className="relative h-full container mx-auto px-4 flex items-center">
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
+              {/* Content */}
+              <div className={`relative h-full container mx-auto px-4 lg:px-8 flex items-center ${containerAlign}`}>
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0, duration: 0.6 }}
+                  className={`max-w-xl text-white bg-black/35 backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-8 shadow-lg ${textAlign}`}
+                >
+                  <motion.p
+                    initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0, duration: 0.6 }}
-                    className="max-w-2xl text-white"
+                    transition={{ delay: 0 }}
+                    className="text-primary font-semibold mb-3 tracking-[0.2em] uppercase"
                   >
-                    <motion.p
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0 }}
-                      className="text-primary font-medium mb-4 tracking-widest uppercase"
-                    >
-                      {slide.subtitle}
-                    </motion.p>
-                    <motion.h1
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0 }}
-                      className="font-serif text-4xl md:text-5xl lg:text-7xl font-bold leading-tight mb-6"
-                    >
-                      {slide.title}
-                    </motion.h1>
-                    <motion.p
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0 }}
-                      className="text-lg md:text-xl text-white/90 mb-8 max-w-lg"
-                    >
-                      {slide.description}
-                    </motion.p>
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0 }}
-                      className="flex flex-col sm:flex-row gap-4"
-                    >
-                      <Link to={slide.ctaLink}>
-                        <Button
-                          size="lg"
-                          className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg"
-                        >
-                          {slide.cta}
-                        </Button>
-                      </Link>
-                      <Link to="/shop">
-                        <Button
-                          size="lg"
-                          variant="outline"
-                          className="border-white hover:bg-white hover:text-secondary px-8 py-6 text-lg text-secondary"
-                        >
-                          Explore All
-                        </Button>
-                      </Link>
-                    </motion.div>
+                    {slide.subtitle}
+                  </motion.p>
+                  <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0 }}
+                    className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4"
+                  >
+                    {slide.title}
+                  </motion.h1>
+                  <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0 }}
+                    className={`text-base md:text-lg text-white/90 mb-6 max-w-prose ${alignRight ? "ml-auto" : ""}`}
+                  >
+                    {slide.description}
+                  </motion.p>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0 }}
+                    className={`flex flex-col sm:flex-row gap-3 ${alignRight ? "sm:justify-end" : ""}`}
+                  >
+                    <Link to={slide.ctaLink}>
+                      <Button
+                        size="lg"
+                        className="bg-primary hover:bg-primary/90 text-white-foreground px-8 py-6 text-base md:text-lg rounded-sm"
+                      >
+                        {slide.cta}
+                      </Button>
+                    </Link>
+                    <Link to="/shop">
+                      <Button
+                        size="lg"
+                        variant="outline"
+                        className="bg-green-700 border-green-700 text-white hover:bg-white hover:text-secondary px-8 py-6 text-base md:text-lg rounded-sm"
+                      >
+                        Explore All
+                      </Button>
+                    </Link>
                   </motion.div>
-                </div>
-              </motion.div>
-            )
-        )}
+                </motion.div>
+              </div>
+            </motion.div>
+          );
+        })}
       </AnimatePresence>
 
-    
       {/* Slide Indicators */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex gap-3">
         {slides.map((_, index) => (
           <button
             key={index}
@@ -157,6 +179,15 @@ export function HeroSlider() {
             aria-label={`Go to slide ${index + 1}`}
           />
         ))}
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
+        <motion.div
+          key={currentSlide}
+          initial={{ width: 0 }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 6, ease: "linear" }}
+          className="h-full bg-green-700"
+        />
       </div>
     </section>
   );

@@ -33,16 +33,16 @@ const footerLinks = {
 };
 
 const socialLinks = [
-  { name: "Instagram", icon: Instagram, href: "https://instagram.com/torsore" },
-  { name: "Facebook", icon: Facebook, href: "https://facebook.com/torsore" },
-  { name: "Twitter", icon: Twitter, href: "https://twitter.com/torsore" },
+  { name: "Instagram", icon: Instagram, href: "https://instagram.com/abc" },
+  { name: "Facebook", icon: Facebook, href: "https://facebook.com/abc" },
+  { name: "Twitter", icon: Twitter, href: "https://twitter.com/abc" },
 ];
 
 export function Footer() {
   return (
-    <footer className="bg-cream border-t border-border">
+    <footer className="bg-secondary text-white border-t border-border">
       {/* Newsletter Section */}
-      <div className="bg-secondary text-secondary-foreground py-16">
+      {/* <div className="bg-secondary text-secondary-foreground py-16">
         <div className="container mx-auto px-4 text-center">
           <h3 className="font-serif text-2xl md:text-3xl mb-4">
             Join the Torsore Family
@@ -64,7 +64,7 @@ export function Footer() {
             Get 10% off your first order when you sign up!
           </p>
         </div>
-      </div>
+      </div> */}
 
       {/* Main Footer */}
       <div className="container mx-auto px-4 py-16">
@@ -76,7 +76,7 @@ export function Footer() {
                 <img src="/logo-removebg-preview.png" alt="Torsore" className="h-14 w-auto" />
               </div>
             </Link>
-            <p className="text-muted-foreground mb-6 max-w-sm">
+            <p className="text-white-foreground mb-6 max-w-sm">
               Celebrating life's special moments with exquisite designs. 
               Luxury wedding dresses, party wear, and festival collections crafted with love.
             </p>
@@ -87,24 +87,24 @@ export function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="h-10 w-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary hover:bg-primary hover:text-primary-foreground transition-colors"
+                  className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-primary hover:text-primary-foreground transition-colors"
                   aria-label={social.name}
                 >
-                  <social.icon className="h-5 w-5" />
+                  <social.icon className="h-5 w-5"/>
                 </a>
               ))}
             </div>
-            <div className="space-y-3 text-sm text-muted-foreground">
+            <div className="space-y-3 text-sm text-white-foreground">
               <div className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-primary" />
+                <Phone className="h-4 w-4 text-white" />
                 <span>+1 (555) 123-4567</span>
               </div>
               <div className="flex items-center gap-3">
-                <Mail className="h-4 w-4 text-primary" />
+                <Mail className="h-4 w-4 text-white" />
                 <span>hello@torsore.com</span>
               </div>
               <div className="flex items-center gap-3">
-                <MapPin className="h-4 w-4 text-primary" />
+                <MapPin className="h-4 w-4 text-white" />
                 <span>123 Fashion Avenue, New York, NY 10001</span>
               </div>
             </div>
@@ -118,7 +118,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors"
+                    className="text-white-foreground hover:text-primary transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -135,7 +135,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors"
+                    className="text-white-foreground hover:text-primary transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -152,7 +152,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors"
+                    className="text-white-foreground hover:text-primary transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -166,7 +166,7 @@ export function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-border py-6">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-white-foreground">
             © {new Date().getFullYear()} Torsore. All rights reserved.
           </p>
           <div className="flex gap-6">
@@ -174,7 +174,7 @@ export function Footer() {
               <Link
                 key={link.name}
                 to={link.href}
-                className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                className="text-sm text-white-foreground hover:text-primary transition-colors"
               >
                 {link.name}
               </Link>

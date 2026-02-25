@@ -82,7 +82,7 @@ export function Navbar() {
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-[200] isolate transition-all duration-300",
-        isScrolled ? "bg-secondary shadow-soft text-white" : "bg-black/5 backdrop-blur-md text-white"
+        isScrolled ? "bg-secondary shadow-soft text-white" : "bg-secondary text-white"
       )}
     >
       <nav className="container mx-auto px-4 lg:px-8 relative" onMouseLeave={() => setActiveMega(null)}>
